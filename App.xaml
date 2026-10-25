@@ -1,0 +1,523 @@
+<Application x:Class="NotchApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             ShutdownMode="OnExplicitShutdown">
+  <Application.Resources>
+    <!-- cores de sistema do iOS (modo escuro) -->
+    <SolidColorBrush x:Key="Group" Color="#1C1C1E"/>
+    <SolidColorBrush x:Key="Group2" Color="#2C2C2E"/>
+    <SolidColorBrush x:Key="Fill3" Color="#3A3A3C"/>
+    <SolidColorBrush x:Key="Separator" Color="#38383A"/>
+    <SolidColorBrush x:Key="Secondary" Color="#8E8E93"/>
+    <SolidColorBrush x:Key="Blue" Color="#0A84FF"/>
+    <SolidColorBrush x:Key="Green" Color="#30D158"/>
+    <SolidColorBrush x:Key="Red" Color="#FF453A"/>
+    <SolidColorBrush x:Key="Orange" Color="#FF9F0A"/>
+    <SolidColorBrush x:Key="Indigo" Color="#5E5CE6"/>
+    <SolidColorBrush x:Key="OrangeDim" Color="#3D2A0A"/>
+    <!-- trocado em tempo real pela cor da capa do que está tocando -->
+    <SolidColorBrush x:Key="Accent" Color="#FFFFFF"/>
+    <FontFamily x:Key="Icons">Segoe Fluent Icons, Segoe MDL2 Assets</FontFamily>
+    <FontFamily x:Key="Display">Segoe UI Variable Display, Segoe UI</FontFamily>
+    <FontFamily x:Key="Text">Segoe UI Variable Text, Segoe UI</FontFamily>
+
+    <!-- botão só com ícone (player, fechar) -->
+    <Style x:Key="IconButton" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontFamily" Value="{StaticResource Icons}"/>
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="Width" Value="44"/>
+      <Setter Property="Height" Value="44"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="Transparent" CornerRadius="99" RenderTransformOrigin="0.5,0.5">
+              <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="#1FFFFFFF"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.86" Duration="0:0:0.12"/>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.86" Duration="0:0:0.12"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.5" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.5" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.35"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- módulo quadrado da Central de Controle -->
+    <Style x:Key="Square" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontFamily" Value="{StaticResource Icons}"/>
+      <Setter Property="FontSize" Value="18"/>
+      <Setter Property="Width" Value="52"/>
+      <Setter Property="Height" Value="52"/>
+      <Setter Property="Background" Value="{StaticResource Group}"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="16" RenderTransformOrigin="0.5,0.5">
+              <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Group2}"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.9" Duration="0:0:0.12"/>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.9" Duration="0:0:0.12"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.5" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.5" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- botão redondo de ação (timer, bandeja, energia); Tag="On" acende -->
+    <Style x:Key="Round" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontFamily" Value="{StaticResource Icons}"/>
+      <Setter Property="FontSize" Value="16"/>
+      <Setter Property="Width" Value="46"/>
+      <Setter Property="Height" Value="46"/>
+      <Setter Property="Background" Value="{StaticResource Group}"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Grid>
+              <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="23" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+              </Border>
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Group2}"/>
+              </Trigger>
+              <Trigger Property="Tag" Value="On">
+                <Setter TargetName="b" Property="Background" Value="#F2F2F7"/>
+                <Setter Property="Foreground" Value="#1C1C1E"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.88" Duration="0:0:0.1"/>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.88" Duration="0:0:0.1"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- atalho rápido da Central (Foco, ponto de acesso, captura): acende em branco quando ligado -->
+    <Style x:Key="QuickTile" TargetType="ToggleButton">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Height" Value="46"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ToggleButton">
+            <Border x:Name="b" CornerRadius="16" Padding="12,0" RenderTransformOrigin="0.5,0.5">
+              <Border.Background><SolidColorBrush Color="#1C1C1E"/></Border.Background>
+              <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+              <ContentPresenter HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Setter Property="Foreground" Value="#1C1C1E"/>
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#F2F2F7" Duration="0:0:0.2"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#1C1C1E" Duration="0:0:0.2"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <MultiTrigger>
+                <MultiTrigger.Conditions>
+                  <Condition Property="IsMouseOver" Value="True"/>
+                  <Condition Property="IsChecked" Value="False"/>
+                </MultiTrigger.Conditions>
+                <Setter TargetName="b" Property="Opacity" Value="0.85"/>
+              </MultiTrigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.93" Duration="0:0:0.1"/>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.93" Duration="0:0:0.1"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- linha de lista dentro da ilha (Bluetooth, saídas de áudio) -->
+    <Style x:Key="ListRow" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="Transparent" CornerRadius="12" Padding="8,7">
+              <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Group2}"/>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Fill3}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- chip arredondado (tempos do timer) -->
+    <Style x:Key="Chip" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="FontWeight" Value="SemiBold"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Background" Value="{StaticResource Group2}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="{TemplateBinding Background}" CornerRadius="15" Padding="14,7" Margin="0,0,6,6">
+              <ContentPresenter HorizontalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Fill3}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- botão redondo liga/desliga (Wi-Fi, Bluetooth) -->
+    <Style x:Key="CircleToggle" TargetType="ToggleButton">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontFamily" Value="{StaticResource Icons}"/>
+      <Setter Property="FontSize" Value="17"/>
+      <Setter Property="Width" Value="44"/>
+      <Setter Property="Height" Value="44"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ToggleButton">
+            <Border x:Name="b" CornerRadius="99" RenderTransformOrigin="0.5,0.5">
+              <Border.Background><SolidColorBrush Color="#3A3A3C"/></Border.Background>
+              <Border.RenderTransform><ScaleTransform/></Border.RenderTransform>
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#0A84FF" Duration="0:0:0.22"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#3A3A3C" Duration="0:0:0.22"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <Trigger Property="IsPressed" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="0.88" Duration="0:0:0.1"/>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="0.88" Duration="0:0:0.1"/>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleX" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                      <DoubleAnimation Storyboard.TargetName="b" Storyboard.TargetProperty="RenderTransform.ScaleY" To="1" Duration="0:0:0.3">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.6" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- chave liga/desliga do iOS -->
+    <Style x:Key="Switch" TargetType="ToggleButton">
+      <Setter Property="Width" Value="51"/>
+      <Setter Property="Height" Value="31"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="VerticalAlignment" Value="Center"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="ToggleButton">
+            <Grid>
+              <Border x:Name="track" CornerRadius="15.5">
+                <Border.Background><SolidColorBrush Color="#39393D"/></Border.Background>
+              </Border>
+              <Ellipse x:Name="knob" Width="27" Height="27" Fill="White" HorizontalAlignment="Left" Margin="2,0,0,0">
+                <Ellipse.RenderTransform><TranslateTransform/></Ellipse.RenderTransform>
+                <Ellipse.Effect><DropShadowEffect BlurRadius="6" ShadowDepth="1" Opacity="0.25"/></Ellipse.Effect>
+              </Ellipse>
+            </Grid>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Trigger.EnterActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="track" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#30D158" Duration="0:0:0.2"/>
+                      <DoubleAnimation Storyboard.TargetName="knob" Storyboard.TargetProperty="RenderTransform.X" To="20" Duration="0:0:0.28">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.35" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.EnterActions>
+                <Trigger.ExitActions>
+                  <BeginStoryboard>
+                    <Storyboard>
+                      <ColorAnimation Storyboard.TargetName="track" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)" To="#39393D" Duration="0:0:0.2"/>
+                      <DoubleAnimation Storyboard.TargetName="knob" Storyboard.TargetProperty="RenderTransform.X" To="0" Duration="0:0:0.28">
+                        <DoubleAnimation.EasingFunction><BackEase Amplitude="0.35" EasingMode="EaseOut"/></DoubleAnimation.EasingFunction>
+                      </DoubleAnimation>
+                    </Storyboard>
+                  </BeginStoryboard>
+                </Trigger.ExitActions>
+              </Trigger>
+              <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Opacity" Value="0.4"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- controle segmentado -->
+    <Style x:Key="Segment" TargetType="RadioButton">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="FontSize" Value="13"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="RadioButton">
+            <Border x:Name="b" CornerRadius="7" Padding="14,5" Background="Transparent">
+              <ContentPresenter HorizontalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsChecked" Value="True">
+                <Setter TargetName="b" Property="Background" Value="#636366"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- linha clicável de lista agrupada -->
+    <Style x:Key="Row" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="Transparent" Padding="16,0" MinHeight="48">
+              <ContentPresenter VerticalAlignment="Center" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="#2C2C2E"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- link de texto pequeno -->
+    <Style x:Key="TextButton" TargetType="Button">
+      <Setter Property="Foreground" Value="{StaticResource Secondary}"/>
+      <Setter Property="FontSize" Value="12"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border Background="Transparent" Padding="6,3">
+              <ContentPresenter/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Foreground" Value="White"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- xis redondo de dispensar -->
+    <Style x:Key="CloseDot" TargetType="Button">
+      <Setter Property="Width" Value="22"/>
+      <Setter Property="Height" Value="22"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" CornerRadius="11" Background="{StaticResource Fill3}">
+              <TextBlock Text="&#xE711;" FontFamily="{StaticResource Icons}" FontSize="8" Foreground="White"
+                         HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="#636366"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+
+    <!-- item de arquivo guardado -->
+    <Style x:Key="FileTile" TargetType="Button">
+      <Setter Property="Foreground" Value="White"/>
+      <Setter Property="Width" Value="68"/>
+      <Setter Property="Height" Value="68"/>
+      <Setter Property="Cursor" Value="Hand"/>
+      <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+      <Setter Property="Template">
+        <Setter.Value>
+          <ControlTemplate TargetType="Button">
+            <Border x:Name="b" Background="Transparent" CornerRadius="14" Padding="4">
+              <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Border>
+            <ControlTemplate.Triggers>
+              <Trigger Property="IsMouseOver" Value="True">
+                <Setter TargetName="b" Property="Background" Value="{StaticResource Group2}"/>
+              </Trigger>
+            </ControlTemplate.Triggers>
+          </ControlTemplate>
+        </Setter.Value>
+      </Setter>
+    </Style>
+  </Application.Resources>
+</Application>
